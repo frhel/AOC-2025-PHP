@@ -1,0 +1,27 @@
+# Composer
+/vendor/
+composer.phar
+composer
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# PHP
+*.log
+
+# Project-specific
+data/

@@ -1,0 +1,24 @@
+{
+    "name": "frhel/adventofcode2025php",
+    "description": "Advent of Code 2025 solutions in PHP",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "frhel\\adventofcode2025php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Freyr H",
+            "email": "freyr.helga@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php-ds/php-ds": "^1.4"
+    },
+    "require-dev": {
+        "phpbench/phpbench": "^1.2"
+    }
+}
