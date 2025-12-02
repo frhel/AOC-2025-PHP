@@ -65,9 +65,19 @@ class Day2 extends Day
         // to reduce the search space. If we find a sequence
         // of the largest possible size, we can stop immediately.
         $half = intdiv($idLen, 2);
-        $size = $half + 1;
+
+        // Start by checking half size (only possible if even length)
+        // before moving to smaller sizes
+        if ($idLen % 2 === 0) {
+            $half = $idLen >> 1;
+            if (substr($id, 0, $half) === substr($id, $half, $half)) {
+                return 1;
+            }
+        }
+
         $base = "";
         $total_chunks = 0;
+        $size = $half;
 
         while (--$size > 1) {
             // If id length is not divisible by size, skip this size
@@ -89,10 +99,6 @@ class Day2 extends Day
                 }
             }
 
-            // If we reach here, we found a matching sequence and can return true.
-            if ($size === $half) {
-                return 1;
-            }
             return 2;
         }
         return 0;
