@@ -12,6 +12,8 @@ namespace frhel\adventofcode2025php\Solutions;
 use frhel\adventofcode2025php\Tools\Prenta;
 use frhel\adventofcode2025php\Tools\Utils;
 
+use parallel\Runtime;
+
 class Range {
     public $lower;
     public $upper;
@@ -33,25 +35,53 @@ class Day2 extends Day
     public function solve($data, $part1 = 0, $part2 = 0) {
         $data = $this->parse_input($this->load_data($this->day, $this->ex)); $this->data = $data;
 
-        [$part1, $part2] = $this->solve_both($data, $part1, $part2);
+        $numCores = 4;
+        $runtimes= [];
+        for ($i = 0; $i < $numCores; $i++) {
+            $runtimes[$i] = new Runtime();
+        }
+        $futures = [];
+        $runtimeIdx = 0;
+
+        foreach ($data as $range) {
+            if (count($futures) >= $numCores) {
+                $future = array_shift($futures);
+                [$p1, $p2] = $future->value();
+                $part1 += $p1;
+                $part2 += $p2;
+            }
+
+            $futures[] = $runtimes[$runtimeIdx % $numCores]->run(function($range) {
+                require 'vendor/autoload.php';
+                return Day2::process_range($range);
+            }, [$range, $autoloadPath]);
+            $runtimeIdx++;
+        }
+
+        foreach ($futures as $future) {
+            [$p1, $p2] = $future->value();
+            $part1 += $p1;
+            $part2 += $p2;
+        }
 
         return [$part1, $part2];
     }
 
-    protected function solve_both($data, &$part1, &$part2) {
-        $id = "";
-        foreach ($data as $range) {
-            for ($i = $range->lower; $i <= $range->upper; $i++) {
-                $id = (string)$i;
-                [$has_sequence, $is_half] = $this->contains_sequence($id);
-                if ($has_sequence) {
-                    if ($is_half && strlen($id) % 2 === 0) {
-                        $part1 += $i;
-                    }
-                    $part2 += $i;
+    public function process_range($range) {
+        $part1 = 0;
+        $part2 = 0;
+
+        for ($i = $range->lower; $i <= $range->upper; $i++) {
+            $id = (string)$i;
+            [$has_sequence, $is_half] = $this->contains_sequence($id);
+            if ($has_sequence) {
+                if ($is_half && strlen($id) % 2 === 0) {
+                    $part1 += $i;
                 }
+                $part2 += $i;
             }
         }
+
         return [$part1, $part2];
     }
 
