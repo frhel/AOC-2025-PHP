@@ -23,7 +23,6 @@ class Day2 extends Day
         parent::__construct($day, $bench, $ex);
     }
 
-
     /**
      * Solves the problem. Needs to be public so we can call it from the benchmarking code
      *
@@ -34,10 +33,11 @@ class Day2 extends Day
         $data = $this->parse_input($this->load_data($this->day, $this->ex)); $this->data = $data;
 
         [$part1, $part2] = $this->solve_both($data, $part1, $part2);
+        
         return [$part1, $part2];
     }
 
-    protected function solve_both($data, &$part1, &$part2) {
+    protected function solve_both(&$data, &$part1, &$part2) {
         $id = "";
         foreach ($data as $range) {
             // Walk through all IDs in current range
@@ -60,17 +60,18 @@ class Day2 extends Day
         return [$part1, $part2];
     }
 
-    protected function contains_sequence($id, $idLen) {
+    protected function contains_sequence(&$id, $idLen) {
         // Save size of half the id as a starting point
         // to reduce the search space. If we find a sequence
         // of the largest possible size, we can stop immediately.
-        $half = (int)($idLen / 2);
-        $size = $half;
+        $half = intdiv($idLen, 2);
+        $size = $half + 1;
+        $base = "";
+        $total_chunks = 0;
 
-        while ($size > 0) {
+        while (--$size > 1) {
             // If id length is not divisible by size, skip this size
             if ($idLen % $size !== 0) {
-                $size--;
                 continue;
             }
 
@@ -79,11 +80,11 @@ class Day2 extends Day
 
             // Iterate over the number of expected sequences. We can skip the first
             // one as it's the base we're comparing to.
-            for ($chunk_count = ($idLen / $size); $chunk_count > 1; $chunk_count--) {
+            $total_chunks = $idLen / $size;
+            for ($chunk_count = $total_chunks; $chunk_count > 1; $chunk_count--) {
                 // Compare to the substring at the current position.
                 // Continue the outer while loop if we find a mismatch.
                 if (substr($id, ($chunk_count - 1) * $size, $size) !== $base) {
-                    $size--;
                     continue 2;
                 }
             }
