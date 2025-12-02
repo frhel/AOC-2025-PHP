@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace frhel\adventofcode2025php\Solutions;
 
-use frhel\adventofcode2025php\Tools\Timer;
 use frhel\adventofcode2025php\Tools\Prenta;
 use frhel\adventofcode2025php\Tools\Utils;
 

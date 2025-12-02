@@ -9,14 +9,12 @@ declare(strict_types=1);
 
 namespace frhel\adventofcode2025php\Solutions;
 
-use frhel\adventofcode2025php\Tools\Timer;
 use frhel\adventofcode2025php\Tools\Prenta;
 use frhel\adventofcode2025php\Tools\Utils;
 
 class Day_Template extends Day
 {
     function __construct(private int $day, $bench = 0, $ex = 0) {
-        $ex = 1;
         parent::__construct($day, $bench, $ex);
     }
 
