@@ -32,6 +32,9 @@ if [ ! -f src/Solutions/Day${DAY}.php ]; then
     sed -i "s/class Day_Template/class Day${DAY}/g" src/Solutions/Day${DAY}.php
     sed -i "s/Problem description: https:\/\/adventofcode.com\/2025\/day\//Problem description: https:\/\/adventofcode.com\/2025\/day\/${DAY}/g" src/Solutions/Day${DAY}.php
 
+    # Remove trailing empty lines
+    sed -i -e :a -e '/^\s*$/d;N;ba' src/Solutions/Day${DAY}.php
+
     echo -e "Created new file: ${BLUE}src/Solutions/Day${DAY}.php${NC}"
 fi
 
