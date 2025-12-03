@@ -11,7 +11,6 @@ namespace frhel\adventofcode2025php\Solutions;
 
 use frhel\adventofcode2025php\Tools\Prenta;
 use frhel\adventofcode2025php\Tools\Utils;
-use Psr\Log\LogLevel;
 
 class Day3 extends Day
 {
@@ -51,41 +50,22 @@ class Day3 extends Day
 
     private function solve_part2($data) {
         $total_joltage = 0;
+        $n_cells = 12;
         foreach ($data as $row) {
-            
-            $row_len = count($row);
-            // Building up the answer cell by cell, appending from right to left
-            // Using a memoization table to store all max values for each cell and number of cells used
-            $n_cells = 12; // Max 12 cells
-            // Initialize all memoization table cells to -1
-            // The table has row_len rows and n_cells columns
-            $memo = array_fill(0, $row_len, array_fill(0, $n_cells + 1, -1));
-
-            // Loop through each cell
-            for ($i = 0; $i < $row_len; $i++) {
-                // Set max value cell for the current last cell
-                $memo[$i][1] = max($memo[$i][1], (int)$row[$i]);
-                
-                // For every starting cell, we loop through all the following cells
-                for ($l = $i + 1; $l < $row_len; $l++) {
-                    // For every following cell, we try to append it to the previous cells' max values
-                    for ($m = 1; $m < $n_cells; $m++) {
-
-                        // For every previous cell combination, we try to append the current cell
-                        // Increment the cell count by appending the current cell to the previous cell combination
-                        $num = (int)$memo[$i][$m] . $row[$l];
-                        $memo[$l][$m+1] = max($memo[$l][$m+1], $num);
-
+            $last_idx = 0;
+            $total = "";
+            for ($i = 1; $i <= 12; $i++) {
+                $curr_end = count($row) - $n_cells + $i - 1;
+                $max = -1;
+                for ($n = $last_idx; $n <= $curr_end; $n++) {
+                    if ($row[$n] > $max) {
+                        $max = $row[$n];
+                        $last_idx = $n + 1;
                     }
                 }
+                $total .= $max;
             }
-            // Grab the maximum value by checking the last column of the memoization table
-            // for all rows (i.e. all ending cells)
-            $max = -1;
-            for ($i = 0; $i < $row_len; $i++) {
-                $max = max($max, $memo[$i][$n_cells]);
-            }
-            $total_joltage += $max;
+            $total_joltage += (int)$total;
         }
         return $total_joltage;
     }
