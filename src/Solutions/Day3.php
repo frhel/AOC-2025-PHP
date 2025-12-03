@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace frhel\adventofcode2025php\Solutions;
 
-use frhel\adventofcode2025php\Tools\Prenta;
-use frhel\adventofcode2025php\Tools\Utils;
 
 class Day3 extends Day
 {
@@ -34,13 +32,17 @@ class Day3 extends Day
         return [$part1, $part2];
     }
 
-    private function solve_part1($data) {
+    static function solve_part1($data) {
         $total_joltage = 0;
         foreach ($data as $row) {
+            $row_len = count($row);
             $max = -1;
-            for ($i = 0; $i < count($row) - 1; $i++) {
-                for ($j = $i+1; $j < count($row); $j++) {
-                    $max = max($max, (int)($row[$i] . $row[$j]));
+            for ($i = 0; $i < $row_len - 1; $i++) {
+                for ($j = $i+1; $j < $row_len; $j++) {
+                    $num = $row[$i] * 10 + $row[$j];
+                    if ($num > $max) {
+                        $max = $num;
+                    }
                 }
             }
             $total_joltage += $max;
@@ -48,24 +50,38 @@ class Day3 extends Day
         return $total_joltage;
     }
 
-    private function solve_part2($data) {
+    static function solve_part2($data) {
         $total_joltage = 0;
-        $n_cells = 12;
+        $n_batteries = 12; // We're only switching on 12 batteries
         foreach ($data as $row) {
+
+            // Save the last index we used to avoid reusing batteries
             $last_idx = 0;
-            $total = "";
+            $total = 0;
+            $row_len = count($row);
+
+            // Since we only need to find 12 batteries, we can limit our search to 12 iterations
             for ($i = 1; $i <= 12; $i++) {
-                $curr_end = count($row) - $n_cells + $i - 1;
-                $max = -1;
-                for ($n = $last_idx; $n <= $curr_end; $n++) {
-                    if ($row[$n] > $max) {
+
+                // For every iteration we need to make sure that we leave enough batteries
+                // at the end for us to turn on. We do this by limiting the search space
+                // to the length of the row minus the number of batteries left to turn on plus
+                // the current iteration index (minus one for zero indexing)
+                $curr_end = $row_len - $n_batteries + $i - 1;
+
+                // The search space for each iteration depends on the last index we used
+                // and the current end we calculated above.
+                // All we have to do is find the max digit within that span
+                $max = -1;                
+                for ($n = $last_idx; $n <= $curr_end; $n++) {                    
+                    if ($row[$n] > $max) {                        
                         $max = $row[$n];
-                        $last_idx = $n + 1;
+                        $last_idx = $n + 1; // Keep track of our current position
                     }
                 }
-                $total .= $max;
+                $total = $total * 10 + $max; // Concat the max digit to our total as a string
             }
-            $total_joltage += (int)$total;
+            $total_joltage += $total;
         }
         return $total_joltage;
     }
@@ -80,7 +96,7 @@ class Day3 extends Day
         $data = preg_split('/\r\n|\r|\n/', $data);
         
         $data = array_map(function($line) {
-            return str_split($line);
+            return array_map('intval', str_split($line));
         }, $data);
 
         return $data;

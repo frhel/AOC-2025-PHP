@@ -28,7 +28,9 @@ fi
 php -d opcache.enable=1 \
     -d opcache.enable_cli=1 \
     -d opcache.optimization_level=0x7FFFFFFF \
-    -d memory_limit=512M \
+    -d memory_limit=2G \
+    -d opcache.jit=tracing \
+    -d opcache.jit_buffer_size=512M \
     -r "
     require 'vendor/autoload.php';
     \$day = $DAY;
