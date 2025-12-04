@@ -55,6 +55,13 @@ class Utils {
         echo PHP_EOL;
     }
 
+    static public function is_within_grid_bounds($grid, $x, $y) {
+        if ($x < 0 || $x >= count($grid[0]) || $y < 0 || $y >= count($grid)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Calculates the Least Common Multiple of all the numbers in the array
      * @depends gcd

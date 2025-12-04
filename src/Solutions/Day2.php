@@ -69,7 +69,6 @@ class Day2 extends Day
         // Start by checking half size (only possible if even length)
         // before moving to smaller sizes
         if ($idLen % 2 === 0) {
-            $half = $idLen >> 1;
             if (substr($id, 0, $half) === substr($id, $half, $half)) {
                 return 1;
             }
