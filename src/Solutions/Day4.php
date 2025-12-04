@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace frhel\adventofcode2025php\Solutions;
 
 use frhel\adventofcode2025php\Tools\Prenta;
+use frhel\adventofcode2025php\Tools\Timer;
 use frhel\adventofcode2025php\Tools\Utils;
 
 class Day4 extends Day
@@ -44,10 +45,15 @@ class Day4 extends Day
     public function solve($data, $part1 = 0, $part2 = 0) {
         $data = $this->parse_input($this->load_data($this->day, $this->ex)); $this->data = $data;
 
+        // $timer = new Timer();
+        // $timer->start();
         $part1 = $this->solve_part1($data, $this->DIRS);
+        // Prenta::label('Part 1 time', $timer->stop(), 'cyan');
 
+        // $timer->start();
         // Add part 1's answer to part 2 as well since part 2 builds on part 1
         $part2 = $this->solve_part2($data, $this->DIRS) + $part1;
+        // Prenta::label('Part 2 time', $timer->stop(), 'cyan');
 
         return [$part1, $part2];
     }
@@ -78,7 +84,7 @@ class Day4 extends Day
                 // Checking whether the current roll is on a grid boundary
                 // to determine if we need a bounds check for the adjacent 
                 // points saves between 20-35% time
-                $check_bounds = Utils::is_on_grid_border($grid, $x, $y);
+                $check_bounds = ($x === 0 || $x === $x_len - 1 || $y === 0 || $y === $y_len - 1);
                 foreach ($dirs as $dir) {
                     // Save each adjacent square as new coordinates relative to the current roll
                     $ax = $x + $dir[0];
@@ -91,8 +97,8 @@ class Day4 extends Day
                     }
 
                     // Increment how many adjacent rolls there are if we find a roll
-                    if ($grid[$ay][$ax] === "@") {
-                        $adjacent++;
+                    if ($grid[$ay][$ax] === "@" && ++$adjacent >= 4) {
+                        break; // No need to keep counting if we already have 4
                     }
                 } // End the adjacent grid points loop
 
