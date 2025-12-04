@@ -38,7 +38,7 @@ class Utils {
         echo PHP_EOL;
     }
 
-    static public function print_grid($grid) {
+    static public function print_grid(&$grid) {
         $left_pad = str_repeat(' ', strlen((string)count($grid)));
         echo $left_pad.implode('', range(0, count($grid)-1)).PHP_EOL;
         foreach ($grid as $row_c => $row) {
@@ -55,11 +55,12 @@ class Utils {
         echo PHP_EOL;
     }
 
-    static public function is_within_grid_bounds($grid, $x, $y) {
-        if ($x < 0 || $x >= count($grid[0]) || $y < 0 || $y >= count($grid)) {
-            return false;
-        }
-        return true;
+    static public function is_outside_grid_bounds(&$grid, $x, $y) {
+        return ($x < 0 || $x >= count($grid[0]) || $y < 0 || $y >= count($grid));
+    }
+
+    static public function is_on_grid_border(&$grid, $x, $y) {
+        return ($x === 0 || $y === 0 || $x === count($grid[0]) - 1 || $y === count($grid) - 1);
     }
 
     /**
